@@ -452,12 +452,20 @@ botao_gerar_var.pack(pady=20)
 # ENCERRAMENTO SEGURO DA APLICAÇÃO
 # ==============================================================================
 def ao_fechar():
-    """Garante que a janela fecha de forma limpa, evitando lixo no terminal do Linux"""
+    """Garante que a janela fecha de forma limpa, matando threads e limpando a memória sem erros no terminal"""
     try:
+        # 1. Fecha qualquer gráfico fantasma do Matplotlib que tenha ficado aberto
+        plt.close('all') 
+        
+        # 2. Encerra a janela gráfica
         janela.quit()
         janela.destroy()
     except Exception:
         pass
+    finally:
+        # 3. O "Golpe Ninja": Mata o processo do Python instantaneamente!
+        import os
+        os._exit(0)
 
 # Intercepta o comando de fechar a janela (o 'X' do programa)
 janela.protocol("WM_DELETE_WINDOW", ao_fechar)
